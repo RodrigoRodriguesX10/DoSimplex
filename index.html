@@ -1,12 +1,210 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Page Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
+    <script src="simplex.js"></script>
+
+    <script>
+        function gerarTabela() {
+            var tbody = document.getElementById("tabela_restricoes");
+            var linha = document.getElementById("linha_funcao");
+            tbody.innerHTML = "";
+            var inner = "";
+            var linhatexto = "<tr><td>MAX Z = </td>";
+            var variaveis = document.getElementById("variaveis");
+            var restricoes = document.getElementById("restricoes");
+            for (let index = 0; index < restricoes.value; index++) {
+                inner += "<tr>"
+                for (let variavel = 0; variavel < variaveis.value; variavel++) {
+                    var id = index + "_" + variavel;
+                    if (!index) {
+                        linhatexto += '<td>\
+                        <div class="input-group-prepend"  style="max-width: 150px">\
+                            <input type="text" id="'+ linha + variavel + '" class="input_linha" style="width: 50px" ><div class="input-group-text">x' + (variavel + 1) + '</div>\
+                            </div></td>';
+
+                    }
+                    inner += '<td>\
+                        <div class="input-group-prepend"  style="max-width: 150px">\
+                            <input type="text" id="'+ id + '" class="input_simplex" style="width: 50px" ><div class="input-group-text">x' + (variavel + 1) + '</div>\
+                            </div></td>';
+                }
+                inner += '<td><div class="input-group-prepend" style="max-width: 150px">\
+                        <div class="input-group-text">&ange;</div><input id="resultado_'+ index + '" class="input_simplex" type="text" style="width: 50px">\
+                            </div></td></tr>';
+
+            }
+            linhatexto += "</tr>";
+            tbody.innerHTML = inner;
+
+            linha.innerHTML = linhatexto;
+
+            $("#parametros").show();
+        }
+
+        function resolverSimplex() {
+            var inputs = document.getElementsByClassName("input_simplex");
+            var linha = document.getElementsByClassName("input_linha");
+            var matriz = [];
+            var cabecalho = [0];
+            for (let i = 0; i < inputs.length; i++) {
+                var indices = inputs[i].id.split("_");
+                matriz[indices[0]] = matriz[indices[0]] || [];
+                matriz[indices[0]][indices[1]] = Number(inputs[i].value);
+            }
+
+            for (let i = 0; i < linha.length; i++) {
+                cabecalho.push(Number(linha[i].value) * -1);
+            }
+
+            var tabelaSimplex = [];
+            tabelaSimplex.push(cabecalho);
+
+            for (let i = 0; i < matriz.length; i++) {
+                var x = [matriz["resultado"][i]].concat(matriz[i]);
+                tabelaSimplex.push(x);
+            }
+
+            console.log(tabelaSimplex);
+
+            var simplexTabela = {
+                m: tabelaSimplex.length,
+                n: tabelaSimplex[0].length,
+                mat: tabelaSimplex
+            };
+            simplex(simplexTabela);
+
+            console.log(simplexTabela);
+
+            var resultado = document.getElementById("resultado_simplex");
+            var header = document.getElementById("resultado_header");
+            var inner = "";
+            var linhatexto = "<tr>";
+
+            var Z = "";
+            for (let index = 1; index < simplexTabela.m; index++) {
+                inner += "<tr>";
+                if (!index) Z += "<tr>"
+                for (let variavel = 0; variavel < simplexTabela.n; variavel++) {
+                    var id = index + "_" + variavel;
+                    if (!index) {
+                        Z += '<td>' + simplexTabela.mat[index][variavel] + '</td>';
+                        
+                    } else
+                        inner += '<td>' + simplexTabela.mat[index][variavel] + '</td>';
+                }
+                inner += '</tr>';
+            }
+
+            for (let variavel = 0; variavel < simplexTabela.n; variavel++) {
+                var nome;
+                if(!variavel){
+                    nome = "b";
+                }else{
+                    if(variavel < Number(variaveis.value) + 1){
+                        nome = "x" + variavel;
+                    } else{
+                        nome = "f" + (variavel-variaveis.value);
+                    }
+                }
+                linhatexto += '<th>' + nome +'</th>';
+            }
+            linhatexto += "</tr>";
+            resultado.innerHTML = inner + Z;
+            header.innerHTML = linhatexto;
+            
+            $("#solucao").show();
+            $(document).scrollTop(1000);
+        }
+    </script>
+
 </head>
+
 <body>
-    <h1>Testando</h1>
+    <div class="text-center">
+        <h2>DoSimplex</h2>
+        <div class="container">
+            <span>Método</span>
+            <label class="radio-inline">
+                <input type="radio" checked name="tipo" value="max"> Maximizar
+                <br>
+            </label>
+        </div>
+        <div class="container">
+            <span>Variáveis</span>
+            <input type="text" id="variaveis" name="variaveis">
+            <br>
+            <span>Restrições</span>
+            <input type="text" id="restricoes" name="restricoes">
+            <br>
+        </div>
+        <br>
+        <button class="btn" type="button" onclick="gerarTabela()">DoSimplex</button>
+    </div>
+    <br>
+    <br>
+
+    <div class="text-center" style="display: none;" id="parametros">
+        <h2>DoSimplex</h2>
+        <h3 class="offset-md-1 col-md-6">Solução Ótima</h3>
+        <div class="offset-md-3 col-md-6">
+            <table class="table texto-centro">
+                <thead id="linha_funcao">
+                </thead>
+                <tbody id="tabela_restricoes">
+                    <tr>
+                        <td>
+                            <div class="input-group-prepend">
+                                <input type="text">
+                                <div class="input-group-text">x1</div>
+                            </div>
+                        </td>
+                        <td>div class="input-group-prepend">
+                            <input type="text">
+                            <div class="input-group-text">x1</div>
+        </div>
+        </td>
+        </td>
+        <td>+
+            <input type="number">x3</td>
+        <td>&ange;</td>
+        <td>
+            <input type="number">
+        </td>
+        </tr>
+        </tbody>
+        </table>
+        <button class="btn" type="button" onclick="resolverSimplex()">Resolver</button>
+    </div>
+    </div>
+    <br>
+    <br>
+    <br>
+    <!-- Pagina 2 -->
+    <div class="text-center" style="display: none;" id="solucao">
+        <h2>DoSimplex</h2>
+        <h3 class="offset-md-1 col-md-6">Solução Ótima</h3>
+        <div class="offset-md-3 col-md-6">
+            <table class="table texto-centro">
+                <thead id="resultado_header"></thead>
+                <tbody id="resultado_simplex">
+                </tbody>
+            </table>
+        </div>
+    </div>
 </body>
+
 </html>
