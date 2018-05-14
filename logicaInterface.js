@@ -75,8 +75,8 @@ function resolverSimplex() {
 
     var resultTabela = gerarTabelaSolucao(simplexTabela);
 
-    resultado.innerHTML = simplexTabela.resultado;
-    header.innerHTML = simplexTabela.header;
+    resultado.innerHTML = resultTabela.resultado;
+    header.innerHTML = resultTabela.header;
 
     $("#solucao").show();
     $(document).scrollTop(1000);
