@@ -16,118 +16,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
         crossorigin="anonymous"></script>
     <script src="simplex.js"></script>
-
-    <script>
-        function gerarTabela() {
-            var tbody = document.getElementById("tabela_restricoes");
-            var linha = document.getElementById("linha_funcao");
-            tbody.innerHTML = "";
-            var inner = "";
-            var linhatexto = "<tr><th>MAX Z = </th>";
-            var variaveis = document.getElementById("variaveis");
-            var restricoes = document.getElementById("restricoes");
-            for (let index = 0; index < restricoes.value; index++) {
-                inner += "<tr>"
-                for (let variavel = 0; variavel < variaveis.value; variavel++) {
-                    var id = index + "_" + variavel;
-                    if (!index) {
-                        linhatexto += '<td>\
-                        <div class="input-group-prepend"  style="max-width: 150px">\
-                            <input type="text" id="'+ linha + variavel + '" class="input_linha" style="width: 50px" ><div class="input-group-text">x' + (variavel + 1) + '</div>\
-                        </div></td>';
-
-                    }
-                    inner += '<td>\
-                        <div class="input-group-prepend"  style="max-width: 150px">\
-                            <input type="text" id="'+ id + '" class="input_simplex" style="width: 50px" ><div class="input-group-text">x' + (variavel + 1) + '</div>\
-                        </div></td>';
-                }
-                inner += '<td><div class="input-group-prepend" style="max-width: 150px">\
-                        <div class="input-group-text">&ange;</div><input id="resultado_'+ index + '" class="input_simplex" type="text" style="width: 50px">\
-                        </div></td></tr>';
-
-            }
-            linhatexto += "</tr>";
-            tbody.innerHTML = inner;
-
-            linha.innerHTML = linhatexto;
-
-            $("#parametros").show();
-        }
-
-        function resolverSimplex() {
-            var inputs = document.getElementsByClassName("input_simplex");
-            var linha = document.getElementsByClassName("input_linha");
-            var matriz = [];
-            var cabecalho = [0];
-            for (let i = 0; i < inputs.length; i++) {
-                var indices = inputs[i].id.split("_");
-                matriz[indices[0]] = matriz[indices[0]] || [];
-                matriz[indices[0]][indices[1]] = Number(inputs[i].value);
-            }
-
-            for (let i = 0; i < linha.length; i++) {
-                cabecalho.push(Number(linha[i].value) * -1);
-            }
-
-            var tabelaSimplex = [];
-            tabelaSimplex.push(cabecalho);
-
-            for (let i = 0; i < matriz.length; i++) {
-                var x = [matriz["resultado"][i]].concat(matriz[i]);
-                tabelaSimplex.push(x);
-            }
-
-            console.log(tabelaSimplex);
-
-            var simplexTabela = {
-                m: tabelaSimplex.length,
-                n: tabelaSimplex[0].length,
-                mat: tabelaSimplex
-            };
-            simplex(simplexTabela);
-
-            console.log(simplexTabela);
-
-            var resultado = document.getElementById("resultado_simplex");
-            var header = document.getElementById("resultado_header");
-            var inner = "";
-            var linhatexto = "<tr>";
-
-            var Z = "<tr>";
-            for (let index = 1; index < simplexTabela.m; index++) {
-                inner += "<tr>";
-                for (let variavel = 0; variavel < simplexTabela.n; variavel++) {
-                    let id = index + "_" + variavel;
-                    let value = Number.isInteger(simplexTabela.mat[index][variavel]) ? simplexTabela.mat[index][variavel] : simplexTabela.mat[index][variavel].toFixed(3);
-                    inner += '<td>' + value + '</td>';
-                }
-                inner += '</tr>';
-            }
-            for (let variavel = 0; variavel < simplexTabela.n; variavel++) {
-                var nome;
-                Z += '<th>' + simplexTabela.mat[0][variavel] + '</th>';
-                if (!variavel) {
-                    nome = "b";
-                } else {
-                    if (variavel < Number(variaveis.value) + 1) {
-                        nome = "x" + variavel;
-                    } else {
-                        nome = "f" + (variavel - variaveis.value);
-                    }
-                }
-                linhatexto += '<th>' + nome + '</th>';
-            }
-            Z += "</tr>";
-            linhatexto += "</tr>";
-            resultado.innerHTML = inner + Z;
-            header.innerHTML = linhatexto;
-
-            $("#solucao").show();
-            $(document).scrollTop(1000);
-        }
-    </script>
-
+    <script src="./logicaInterface.js"></script>
 </head>
 
 <body>
@@ -142,10 +31,10 @@
         </div>
         <div class="container">
             <span>Variáveis</span>
-            <input type="text" id="variaveis" name="variaveis">
+            <input type="number" id="variaveis" name="variaveis">
             <br>
             <span>Restrições</span>
-            <input type="text" id="restricoes" name="restricoes">
+            <input type="number" id="restricoes" name="restricoes">
             <br>
         </div>
         <br>
