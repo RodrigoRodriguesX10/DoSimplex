@@ -34,23 +34,23 @@ Using simplex.js file:
 
 var tableau = {
 
-  m: 3, // Number of restrictions
+    m: 4, // lines: number of restrictions + 1 (for Z line)
   
-  n: 2, // number of variable
+    n: 3, // columns: number of variables + 1 (for B column)
   
-  tableau: [
+    tableau: [
   
-  //↓ first column (index 0 of all inner array) is always the B column
+    // ↓ first column (index 0 of all inner array) is always the B column
   
-    [0, -3, -5, 0, 0, 0], // first array is always Z line
+        [0, -3, -5], // first array is always Z line
     
-    [3, 1, 0, 1, 0, 0],
+        [3, 1, 0],
     
-    [4, 0, 1, 0, 1, 0],
+        [4, 0, 1],
     
-    [1, 0, 0, -3, -2, 1]
+        [18, 3, 2]
     
-  ],
+    ],
   
 };
 
