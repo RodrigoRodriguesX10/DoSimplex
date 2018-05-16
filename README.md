@@ -1,8 +1,9 @@
 # DoSimplex
 Simple JavaScript Program to solving Linear Programming Problems with SIMPLEX
 
-## Warning
-This job was developed for study scenerio and has no commitment to professional matters.
+## Warning!
+This job was developed for study scenario and has no commitment to professional matters.
+This project was developed by university students with an exclusively didactic purpose and is associated to the "Operational Research" discipline of the Information Systems course of the "University Center Euripedes of Marília" (UNIVEM - Brazil).
 
 ## Example
 Be the goal:
@@ -53,7 +54,7 @@ var tableau = {
   
 };
 
-simplex(tableau); // execute function and the solve will be calculated into variable
+simplex(tableau); // execute function and the solution will be calculated into tableau variable.
 
 console.log(tableau); // see the result
 
