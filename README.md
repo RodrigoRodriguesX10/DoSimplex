@@ -32,30 +32,30 @@ You got the initial tableau:
 ### For code:
 Using simplex.js file:
 
-var tableau = {
+    var tableau = {
 
-    m: 4, // lines: number of restrictions + 1 (for Z line)
-  
-    n: 3, // columns: number of variables + 1 (for B column)
-  
-    tableau: [
-  
-    // ↓ first column (index 0 of all inner array) is always the B column
-  
-        [0, -3, -5], // first array is always Z line
-    
-        [3, 1, 0],
-    
-        [4, 0, 1],
-    
-        [18, 3, 2]
-    
-    ],
-  
-};
+        m: 4, // lines: number of restrictions + 1 (for Z line)
 
-simplex(tableau); // execute function and the solution will be calculated into tableau variable.
+        n: 3, // columns: number of variables + 1 (for B column)
 
-console.log(tableau); // see the result
+        tableau: [
 
-console.log("Z = "+ tableau.tableau[0][0]); // Z = 29
+        // ↓ first column (index 0 of all inner array) is always the B column
+
+            [0, -3, -5], // first array is always Z line
+
+            [3, 1, 0],
+
+            [4, 0, 1],
+
+            [18, 3, 2]
+
+        ],
+
+    };
+
+    simplex(tableau); // execute function and the solution will be calculated into tableau variable.
+
+    console.log(tableau); // see the result
+
+    console.log("Z = "+ tableau.tableau[0][0]); // Z = 29
