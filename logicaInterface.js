@@ -5,11 +5,19 @@ function gerarTabela() {
     var linha = document.getElementById("linha_funcao");
     var inner = "";
     var linhatexto = "<tr><th>MAX Z = </th>";
-    variaveis = document.getElementById("variaveis");
-    restricoes = document.getElementById("restricoes");
-    for (let index = 0; index < restricoes.value; index++) {
+    variaveis = document.getElementById("variaveis").value;
+    restricoes = document.getElementById("restricoes").value;
+    if(!restricoes || !variaveis || isNaN(restricoes) || isNaN(restricoes)) {
+        alert('Numero de variaveis ou restrições inválidos.')
+        variaveis.value = null;
+        restricoes.value = null;
+        $("#parametros").hide();
+        $("#reiniciar").hide();
+        return null;
+    }
+    for (let index = 0; index < restricoes; index++) {
         inner += "<tr>"
-        for (let variavel = 0; variavel < variaveis.value; variavel++) {
+        for (let variavel = 0; variavel < variaveis; variavel++) {
             var id = index + "_" + variavel;
             if (!index) {
                 linhatexto += '<td>\
@@ -36,18 +44,38 @@ function gerarTabela() {
     $("#parametros").show();
 }
 
+function reiniciar() {
+    $("#parametros").hide();
+    $("#solucao").hide();
+    $("#reiniciar").hide();
+    document.getElementById("variaveis").value = null;
+    document.getElementById("restricoes").value = null;
+}
+
 function resolverSimplex() {
     var inputs = document.getElementsByClassName("input_simplex");
     var linha = document.getElementsByClassName("input_linha");
     var matriz = [];
     var cabecalho = [0];
     for (let i = 0; i < inputs.length; i++) {
+        if(!inputs[i].value || isNaN(inputs[i].value)){
+            alert('Variáveis inválidas.')
+            $("#solucao").hide();
+            $("#reiniciar").hide();
+            return null
+        }
         var indices = inputs[i].id.split("_");
         matriz[indices[0]] = matriz[indices[0]] || [];
         matriz[indices[0]][indices[1]] = Number(inputs[i].value);
     }
 
     for (let i = 0; i < linha.length; i++) {
+        if(!linha[i].value || isNaN(inputs[i].value)){
+            alert('Função inválida.')
+            $("#solucao").hide();
+            $("#reiniciar").hide();
+            return null
+        }
         cabecalho.push(Number(linha[i].value) * -1);
     }
 
@@ -79,6 +107,7 @@ function resolverSimplex() {
     header.innerHTML = resultTabela.header;
 
     $("#solucao").show();
+    $("#reiniciar").show();
     $(document).scrollTop(1000);
 }
 
