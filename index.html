@@ -9,8 +9,7 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
         crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
@@ -24,19 +23,21 @@
         <h2>DoSimplex</h2>
         <div class="container">
             <span>Método</span>
-            <label class="radio-inline">
+            <label class="radio-inline" id="objetivo">
                 <input type="radio" checked name="tipo" value="max"> Maximizar
-                <input type="radio" checked name="tipo" value="max"> Minimizar
+                <input type="radio" name="tipo" value="min"> Minimizar
                 <br>
             </label>
         </div>
         <div class="container">
-            <span>Variáveis</span>
-            <input type="number" id="variaveis" name="variaveis">
-            <br>
-            <span>Restrições</span>
-            <input type="number" id="restricoes" name="restricoes">
-            <br>
+                <div>
+                    <label>Variáveis
+                    <input class="form-control" type="number" id="variaveis" name="variaveis"></label>
+                </div>
+                <div >
+                    <label>Restrições
+                    <input class="form-control" type="number" id="restricoes" name="restricoes"></label>
+                </div>
         </div>
         <br>
         <button class="btn" type="button" onclick="gerarTabela()">DoSimplex</button>
@@ -45,7 +46,7 @@
     <br>
 
     <div class="text-center" style="display: none;" id="parametros">
-        <h2>DoSimplex</h2>
+        <h3>Objetivos e Restrições</h3>
         <div class="offset-md-3 col-md-6">
             <table class="table texto-centro">
                 <thead id="linha_funcao">
@@ -55,13 +56,35 @@
             </table>
             <button class="btn" type="button" onclick="resolverSimplex()">Resolver</button>
         </div>
+        <hr/>
     </div>
-    <br>
-    <br>
-    <br>
+
+    <!-- Passo a passo -->
+    <div style="display: none;" id="passoapasso">
+        <hr/>
+        <div class="text-center">
+            <h3 class="offset-md-1 col-md-6">Passo a Passo</h3>
+            <div class="offset-md-3 col-md-6">
+                <table class="table texto-centro">
+                    <thead></thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="text-center">
+            <button class="btn" id="anterior" onclick="avancar(-1)">Anterior</button>
+            <button class="btn" id="proximo" onclick="avancar(1)">Proximo</button>
+        </div>
+        <hr/>
+    </div>
+
     <!-- Pagina 2 -->
     <div class="text-center" style="display: none;" id="solucao">
-        <h3 class="offset-md-1 col-md-6">Solução Ótima</h3>
+        <hr/>
+        <h3 class="offset-md-2 col-md-6">Solução Ótima
+            <button class="btn float-right" onclick="reiniciar()">Reiniciar</button>
+        </h3>
         <div class="offset-md-3 col-md-6">
             <table class="table texto-centro">
                 <thead id="resultado_header"></thead>
@@ -69,10 +92,9 @@
                 </tbody>
             </table>
         </div>
-    </div><br>
-    <div class="text-center" id="reiniciar" style="display: none;">
-        <button class="btn" onclick="reiniciar()">Reiniciar</button>
     </div>
+    <br>
+
 </body>
 
 </html>

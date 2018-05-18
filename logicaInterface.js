@@ -1,12 +1,14 @@
-var variaveis, restricoes, tbody, resultado, header; // Variáveis com a referência dos elementos da página
+var variaveis, restricoes, tbody, resultado, header, objetivo, restricoesOperadores = [], simplexTabela; // Variáveis com a referência dos elementos da página
 function gerarTabela() {
     tbody = document.getElementById("tabela_restricoes");
     tbody.innerHTML = "";
     var linha = document.getElementById("linha_funcao");
+    objetivo = $("#objetivo > input:checked").first().val();
     var inner = "";
-    var linhatexto = "<tr><th>MAX Z = </th>";
+    var linhatexto = "<tr><th>" + (objetivo.toUpperCase()) +" Z = </th>";
     variaveis = document.getElementById("variaveis").value;
     restricoes = document.getElementById("restricoes").value;
+    restricoesOperadores = [];
     if(!restricoes || !variaveis || isNaN(restricoes) || isNaN(restricoes)) {
         alert('Numero de variaveis ou restrições inválidos.')
         variaveis.value = null;
@@ -16,6 +18,7 @@ function gerarTabela() {
         return null;
     }
     for (let index = 0; index < restricoes; index++) {
+        restricoesOperadores.push("<=");
         inner += "<tr>"
         for (let variavel = 0; variavel < variaveis; variavel++) {
             var id = index + "_" + variavel;
@@ -47,6 +50,7 @@ function gerarTabela() {
 function reiniciar() {
     $("#parametros").hide();
     $("#solucao").hide();
+    $("#passoapasso").hide();
     $("#reiniciar").hide();
     document.getElementById("variaveis").value = null;
     document.getElementById("restricoes").value = null;
@@ -89,12 +93,17 @@ function resolverSimplex() {
 
     console.log(tabelaSimplex);
 
-    var simplexTabela = {
+    simplexTabela = {
         m: tabelaSimplex.length,
         n: tabelaSimplex[0].length,
-        tableau: tabelaSimplex
+        tableau: tabelaSimplex,
+        restricoes: restricoesOperadores,
+        max: objetivo == "max"
     };
-    simplex(simplexTabela);
+
+    if(!simplex(simplexTabela)){
+        return alert("Foi mal, não foi possível achar uma solução, fazer o que, né? Tenta outros números aí.");
+    }
 
     console.log(simplexTabela);
 
@@ -105,19 +114,41 @@ function resolverSimplex() {
 
     resultado.innerHTML = resultTabela.resultado;
     header.innerHTML = resultTabela.header;
-
+    avancar();
     $("#solucao").show();
+    $("#passoapasso").show();
     $("#reiniciar").show();
     $(document).scrollTop(1000);
 }
 
+var pag = 0;
+
+function avancar(i){
+    var tabelaPassoAPasso = $("#passoapasso");
+    pag += i ? i : 0;
+    if(!pag){
+        $("#anterior").hide();
+    } else{
+        $("#anterior").show();
+        if(pag == (simplexTabela.passoapasso.length - 1)){
+            $("#proximo").hide();
+        } else{
+            $("#proximo").show();
+        }
+    }
+    
+    var htmlTabela = gerarTabelaSolucao(simplexTabela.passoapasso[pag]);
+    tabelaPassoAPasso.find("thead").html(htmlTabela.header);
+    tabelaPassoAPasso.find("tbody").html(htmlTabela.resultado);
+}
+
 function gerarTabelaSolucao(tabela) {
     var inner = "";
-    var linhatexto = "<tr>";
+    var linhatexto = "<tr><th></th>";
 
-    var Z = "<tr>";
+    var Z = "<tr><th>Z</th>";
     for (let index = 1; index < tabela.m; index++) {
-        inner += "<tr>";
+        inner += "<tr><td>" + tabela.labelColumn[index-1] + "</td>";
         for (let variavel = 0; variavel < tabela.n; variavel++) {
             let id = index + "_" + variavel;
             let value = Number.isInteger(tabela.tableau[index][variavel]) ? tabela.tableau[index][variavel] : tabela.tableau[index][variavel].toFixed(3);
@@ -128,16 +159,7 @@ function gerarTabelaSolucao(tabela) {
     for (let variavel = 0; variavel < tabela.n; variavel++) {
         var nome;
         Z += '<th>' + tabela.tableau[0][variavel] + '</th>';
-        if (!variavel) {
-            nome = "b";
-        } else {
-            if (variavel < Number(variaveis.value) + 1) {
-                nome = "x" + variavel;
-            } else {
-                nome = "f" + (variavel - variaveis.value);
-            }
-        }
-        linhatexto += '<th>' + nome + '</th>';
+        linhatexto += '<th>' + (variavel ? tabela.labelRow[variavel-1] : "b") + '</th>';
     }
     Z += "</tr>";
     linhatexto += "</tr>";
