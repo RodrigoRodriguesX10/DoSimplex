@@ -1,5 +1,5 @@
 # DoSimplex
-Programa simples em Javascript para resolução de Problemas de Programação Linear com SIMPLEX.
+Programa simples em Javascript para resolução de Problemas de Programação Linear com SIMPLEX. [[Read EN-US](https://github.com/RodrigoRodriguesX10/DoSimplex/edit/master/README.md)]
 
 ## AVISO!
 Esse trabalho foi desenvolvido para cenário de estudo e não tem compromisso com questões profissionais.
