@@ -1,5 +1,5 @@
 # DoSimplex 
-Simple JavaScript Program to solving Linear Programming Problems with SIMPLEX. [[Ler PT-BR](https://github.com/RodrigoRodriguesX10/DoSimplex/edit/master/README.pt.md)]
+Simple JavaScript Program to solving Linear Programming Problems with SIMPLEX. [[Ler PT-BR](https://github.com/RodrigoRodriguesX10/DoSimplex/blob/master/README.pt.md)]
 
 ## Warning!
 This job was developed for study scenario and has no commitment to professional matters.
