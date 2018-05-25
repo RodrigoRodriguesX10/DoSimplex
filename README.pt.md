@@ -52,6 +52,10 @@ Usando o arquivo simplex.js (esse arquivo não requer quaisquer outros módulos 
 
         ],
 
+        restrictions: ["<=", "<=", "<="],
+    
+        max: true, // se o seu objetivo for MINIMIZAR, use FALSE
+    
     };
 
     simplex(tableau); // execute a função e a solução será calculada dentro da variável tableau.
