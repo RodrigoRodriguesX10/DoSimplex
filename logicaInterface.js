@@ -1,4 +1,4 @@
-var variaveis, restricoes, tbody, resultado, header, objetivo, restricoesOperadores = [], simplexTabela; // Variáveis com a referência dos elementos da página
+var variaveis, restricoes, iteracoes, tbody, resultado, header, objetivo, restricoesOperadores = [], simplexTabela; // Variáveis com a referência dos elementos da página
 function gerarTabela() {
     tbody = document.getElementById("tabela_restricoes");
     tbody.innerHTML = "";
@@ -8,7 +8,7 @@ function gerarTabela() {
     var linhatexto = "<tr><th>" + (objetivo.toUpperCase()) + " Z = </th>";
     variaveis = document.getElementById("variaveis").value;
     restricoes = document.getElementById("restricoes").value;
-    var iteracoes = document.getElementById("iteracoes").value;
+    iteracoes = document.getElementById("iteracoes").value;
     restricoesOperadores = [];
     if (!restricoes || !variaveis || isNaN(restricoes) || isNaN(restricoes)) {
         alert('Número de variáveis ou restrições inválidos.')
@@ -102,7 +102,7 @@ function resolverSimplex() {
         max: objetivo == "max"
     };
 
-    if (!simplex(simplexTabela)) {
+    if (!simplex(simplexTabela, iteracoes)) {
         return alert("Foi mal, não foi possível achar uma solução, fazer o que, né? Tenta outros números aí.");
     }
 
