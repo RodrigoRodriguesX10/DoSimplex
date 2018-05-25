@@ -1,13 +1,19 @@
-function Tableau(m, n) {
-    this.m = Number(m) || 0;
-    this.n = Number(n) || 0;
-    this.max = true;
-    this.labelColumn = [];
-    this.labelRow = [];
-    this.createCopy = function () { return createCopy(this); }
-    this.restricoes = Array.apply(null, Array(m)).map(Number.prototype.valueOf, 0);
-    let clona = function () { return this.slice(); }
-    this.tableau = Array.apply(null, Array(m)).map(clona, Array.apply(null, Array(n)).map(Number.prototype.valueOf, 0));
+function Matriz(x, y) {
+    let clona = function () { return this.slice(); };
+    return Array.apply(null, Array(x)).map(clona, Array.apply(null, Array(y)).map(Number.prototype.valueOf, 0));
+}
+
+class Tableau {
+    constructor(m, n) {
+        this.m = Number(m) || 0;
+        this.n = Number(n) || 0;
+        this.max = true;
+        this.labelColumn = [];
+        this.labelRow = [];
+        this.createCopy = function () { return createCopy(this); };
+        this.restricoes = Array.apply(null, Array(m)).map(Number.prototype.valueOf, 0);
+        this.tableau = Matriz(this.m, this.n);
+    }
 }
 
 function pivot_on(tab, row, col) {
@@ -44,10 +50,12 @@ function find_pivot_column(tab) {
 function find_pivot_row(tab, pivot_col) {
     let i, pivot_row = 0, min_ratio = -1, ratio;
     for (i = 1; i < tab.m; i++) {
-        ratio = tab.tableau[i][0] / (tab.tableau[i][pivot_col]);
-        if ((ratio > 0 && ratio < min_ratio) || min_ratio < 0) {
-            min_ratio = ratio;
-            pivot_row = i;
+        if (tab.tableau[i][pivot_col]) {
+            ratio = tab.tableau[i][0] / (tab.tableau[i][pivot_col]);
+            if ((ratio > 0 && ratio < min_ratio) || min_ratio < 0) {
+                min_ratio = ratio;
+                pivot_row = i;
+            }
         }
     }
     return min_ratio == -1 ? -1 : pivot_row;
@@ -64,7 +72,7 @@ function add_variaveis_nao_basicas(tab) {
     for (i = 0; i < tab.m; i++) {
         tab.labelColumn.push("f" + (i + 1));
         for (j = 1; j < tab.m; j++) {
-            tab.tableau[i][j + tab.n - 1] = (i == j) ? (tab.restricoes[i] == "<=" ? 1 : -1) : 0;
+            tab.tableau[i][j + tab.n - 1] = (i == j) ? (tab.restricoes[i - 1] == "<=" ? 1 : -1) : 0;
         }
     }
 
@@ -127,9 +135,10 @@ function criarFuncaoObjetivo(tab) {
     tab.funcaoObjetivo = tab.tableau[0].slice();
 }
 
-function simplex(tab) {
+function simplex(tab, iteracoes) {
     console.log("TABLEAU INICIAL: ", JSON.stringify(tab));
     let loop = 0;
+    iteracoes = iteracoes || 20;
     try {
         let passoapasso = [];
         let pivot_col, pivot_row;
@@ -148,11 +157,11 @@ function simplex(tab) {
                 pivot_row = find_pivot_row(tab, pivot_col);
                 if (pivot_row < 0) {
                     tab.max = true;
-                    if(tab.hasExtraVariable) calculateZLine(tab, true);
+                    if (tab.hasExtraVariable) calculateZLine(tab, true);
                     break;
                 }
                 pivot_on(tab, pivot_row, pivot_col);
-                if (loop > 20) return false;
+                if (loop > iteracoes) return false;
             }
             else {
                 pivot_col = find_pivot_column(tab);
@@ -164,14 +173,12 @@ function simplex(tab) {
                     break;
                 }
                 pivot_on(tab, pivot_row, pivot_col);
-                if (loop > 20) return false; // Essa linha limita a quantidade de iterações, ou seja, pode ser passada por parâmetro
+                if (loop > iteracoes) return false; // Essa linha limita a quantidade de iterações, ou seja, pode ser passada por parâmetro
             }
             passoapasso.push(createCopy(tab));
         } while (++loop);
-        passoapasso.push(createCopy(tab));
-
         tab.passoapasso = passoapasso;
-
+        tab.iteracoes = loop;
         return true;
     } catch (error) {
         console.log(error);
@@ -184,11 +191,62 @@ function createCopy(tableau) {
     for (let i = 0; i < tableau.tableau.length; i++) {
         copy.tableau[i] = tableau.tableau[i].slice();
     }
-
     copy.funcaoObjetivo = tableau.funcaoObjetivo.slice();
     copy.restricoes = tableau.restricoes.slice();
     copy.labelColumn = tableau.labelColumn.slice();
     copy.labelRow = tableau.labelRow.slice();
-
     return copy;
+}
+
+function getSensibilityTable(final) {
+    var sensibilityTable = {
+        labelRow: ["Variável", "Valor Final", "Preço Sombra", "+", "-"],
+        labelColumn: final.labelRow.concat(["Z"]),
+        table: Matriz(final.labelRow.length + 1, 4)
+    };
+    // VALOR FINAL
+    for (let index = 0; index <= final.labelColumn.length; index++) {
+        let i = sensibilityTable.labelColumn.indexOf(final.labelColumn[index]);
+        sensibilityTable.table[i >= 0 ? i : (sensibilityTable.labelColumn.length - 1)][0] = (final.tableau[index + 1] || final.tableau[0])[0];
+    }
+    // PREÇO SOMBRA
+    for (let index = 0; index < sensibilityTable.labelColumn.length; index++) {
+        sensibilityTable.table[index][1] = "-";
+        if (sensibilityTable.labelColumn[index].match(/^f/)) {
+            sensibilityTable.table[index][1] = final.tableau[0][(index + 1) % sensibilityTable.labelColumn.length];
+        }
+    }
+    // Calcular + e - 
+    let firstColumn = final.labelRow.indexOf("f1") + 1;
+    for (let index = 0, total = sensibilityTable.labelColumn.length; index < total; index++) {
+        sensibilityTable.table[index][2] = "-";
+        sensibilityTable.table[index][3] = "-";
+
+        if (index >= firstColumn && (total) > index) {
+            let divide = final.tableau[1][0];
+            let maior = (divide) / (final.tableau[1][index]), menor = (divide) / (final.tableau[1][index]);
+
+            for (let l = 1; l <= final.labelColumn.length; l++) {
+                let divide = final.tableau[l][0];
+                const element = final.tableau[l][index];
+                let mn = (divide) / (element), mx = (divide) / (element);
+                if (Math.abs(mn) !== Infinity) {
+                    if (mn < menor) {
+                        menor = mn;
+                    }
+                    if (mx > maior) {
+                        maior = mx;
+                    }
+                }
+            }
+            sensibilityTable.table[index - 1][2] = Math.abs(maior);
+            sensibilityTable.table[index - 1][3] = Math.abs(menor);
+            if (final.labelColumn.indexOf(final.labelRow[index]) >= 0){
+                sensibilityTable.table[index - 1][2] = Math.abs(menor);
+                sensibilityTable.table[index - 1][3] = Math.abs(maior);
+            }
+        }
+
+    }
+    return sensibilityTable;
 }

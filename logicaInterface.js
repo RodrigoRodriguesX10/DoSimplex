@@ -5,12 +5,13 @@ function gerarTabela() {
     var linha = document.getElementById("linha_funcao");
     objetivo = $("#objetivo > input:checked").first().val();
     var inner = "";
-    var linhatexto = "<tr><th>" + (objetivo.toUpperCase()) +" Z = </th>";
+    var linhatexto = "<tr><th>" + (objetivo.toUpperCase()) + " Z = </th>";
     variaveis = document.getElementById("variaveis").value;
     restricoes = document.getElementById("restricoes").value;
+    var iteracoes = document.getElementById("iteracoes").value;
     restricoesOperadores = [];
-    if(!restricoes || !variaveis || isNaN(restricoes) || isNaN(restricoes)) {
-        alert('Numero de variaveis ou restrições inválidos.')
+    if (!restricoes || !variaveis || isNaN(restricoes) || isNaN(restricoes)) {
+        alert('Número de variáveis ou restrições inválidos.')
         variaveis.value = null;
         restricoes.value = null;
         $("#parametros").hide();
@@ -62,7 +63,7 @@ function resolverSimplex() {
     var matriz = [];
     var cabecalho = [0];
     for (let i = 0; i < inputs.length; i++) {
-        if(!inputs[i].value || isNaN(inputs[i].value)){
+        if (!inputs[i].value || isNaN(inputs[i].value)) {
             alert('Variáveis inválidas.')
             $("#solucao").hide();
             $("#reiniciar").hide();
@@ -74,7 +75,7 @@ function resolverSimplex() {
     }
 
     for (let i = 0; i < linha.length; i++) {
-        if(!linha[i].value || isNaN(inputs[i].value)){
+        if (!linha[i].value || isNaN(inputs[i].value)) {
             alert('Função inválida.')
             $("#solucao").hide();
             $("#reiniciar").hide();
@@ -101,7 +102,7 @@ function resolverSimplex() {
         max: objetivo == "max"
     };
 
-    if(!simplex(simplexTabela)){
+    if (!simplex(simplexTabela)) {
         return alert("Foi mal, não foi possível achar uma solução, fazer o que, né? Tenta outros números aí.");
     }
 
@@ -114,29 +115,32 @@ function resolverSimplex() {
 
     resultado.innerHTML = resultTabela.resultado;
     header.innerHTML = resultTabela.header;
+    $("#passoapassotitle").html("Passo a passo ["+ simplexTabela.iteracoes + " iteração(ões)]" );
     avancar();
     $("#solucao").show();
     $("#passoapasso").show();
     $("#reiniciar").show();
-    $(document).scrollTop(1000);
+    $("html, body").animate({
+        scrollTop: 1000
+    }, 1000);
 }
 
 var pag = 0;
 
-function avancar(i){
+function avancar(i) {
     var tabelaPassoAPasso = $("#passoapasso");
     pag += i ? i : 0;
-    if(!pag){
+    if (!pag) {
         $("#anterior").hide();
-    } else{
+    } else {
         $("#anterior").show();
-        if(pag == (simplexTabela.passoapasso.length - 1)){
+        if (pag == (simplexTabela.passoapasso.length - 1)) {
             $("#proximo").hide();
-        } else{
+        } else {
             $("#proximo").show();
         }
     }
-    
+
     var htmlTabela = gerarTabelaSolucao(simplexTabela.passoapasso[pag]);
     tabelaPassoAPasso.find("thead").html(htmlTabela.header);
     tabelaPassoAPasso.find("tbody").html(htmlTabela.resultado);
@@ -148,7 +152,7 @@ function gerarTabelaSolucao(tabela) {
 
     var Z = "<tr><th>Z</th>";
     for (let index = 1; index < tabela.m; index++) {
-        inner += "<tr><td>" + tabela.labelColumn[index-1] + "</td>";
+        inner += "<tr><td>" + tabela.labelColumn[index - 1] + "</td>";
         for (let variavel = 0; variavel < tabela.n; variavel++) {
             let id = index + "_" + variavel;
             let value = Number.isInteger(tabela.tableau[index][variavel]) ? tabela.tableau[index][variavel] : tabela.tableau[index][variavel].toFixed(3);
@@ -159,9 +163,40 @@ function gerarTabelaSolucao(tabela) {
     for (let variavel = 0; variavel < tabela.n; variavel++) {
         var nome;
         Z += '<th>' + tabela.tableau[0][variavel] + '</th>';
-        linhatexto += '<th>' + (variavel ? tabela.labelRow[variavel-1] : "b") + '</th>';
+        linhatexto += '<th>' + (variavel ? tabela.labelRow[variavel - 1] : "b") + '</th>';
     }
     Z += "</tr>";
     linhatexto += "</tr>";
+
+
     return { resultado: inner + Z, header: linhatexto };
 }
+
+function analise() {
+    var x = getSensibilityTable(simplexTabela);
+    var tabela = $("#table-analise");
+    var thead = "<thead><tr>"
+    for (let index = 0; index < x.labelRow.length; index++) {
+        const element = x.labelRow[index];
+        thead += "<th>" + element + "</th>";
+    }
+    thead += "</tr></thead>";
+    var tbody = "<tbody>";
+    for (let index = 0; index < x.labelColumn.length; index++) {
+        tbody += "<tr><th>" + x.labelColumn[index] + "</th>";
+        for (let variavel = 0; variavel < 4; variavel++) {
+            tbody += "<td>" + (isNaN(Number(x.table[index][variavel])) ? x.table[index][variavel] : x.table[index][variavel].toFixed(3)) + "</td>";
+        }
+        tbody += '</tr>';
+    }
+
+    tbody += "</tbody>";
+    tabela.html(thead + tbody);
+
+    $("#analise").show();
+}
+$(document).ready(function(){
+    $("#fechar").on('click', function () { 
+        $("#analise").hide(); 
+    });
+})

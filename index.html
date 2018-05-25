@@ -24,20 +24,29 @@
         <div class="container">
             <span>Método:&emsp;</span>
             <label class="radio-inline" id="objetivo">
-                <input type="radio" id="max" checked name="tipo" value="max"> <label for="max">Maximizar</label>
-                <input type="radio" id="min" name="tipo" value="min"> <label for="min">Minimizar</label>
+                <input type="radio" id="max" checked name="tipo" value="max">
+                <label for="max">Maximizar</label>
+                <input type="radio" id="min" name="tipo" value="min">
+                <label for="min">Minimizar</label>
                 <br>
             </label>
         </div>
         <div class="container">
-                <div>
-                    <label>Variáveis
-                    <input class="form-control" type="number" id="variaveis" name="variaveis"></label>
-                </div>
-                <div >
-                    <label>Restrições
-                    <input class="form-control" type="number" id="restricoes" name="restricoes"></label>
-                </div>
+            <div>
+                <label>Variáveis
+                    <input class="form-control" type="number" id="variaveis" name="variaveis">
+                </label>
+            </div>
+            <div>
+                <label>Restrições
+                    <input class="form-control" type="number" id="restricoes" name="restricoes">
+                </label>
+            </div>
+            <div>
+                <label>Iterações
+                    <input class="form-control" type="number" id="iteracoes" name="iteracoes">
+                </label>
+            </div>
         </div>
         <br>
         <button class="btn" type="button" onclick="gerarTabela()">DoSimplex</button>
@@ -63,7 +72,7 @@
     <div style="display: none;" id="passoapasso">
         <hr/>
         <div class="text-center">
-            <h3 class="offset-md-1 col-md-6">Passo a Passo</h3>
+            <h3 id="passoapassotitle">Passo a Passo </h3>
             <div class="offset-md-3 col-md-6">
                 <table class="table texto-centro">
                     <thead></thead>
@@ -82,8 +91,9 @@
     <!-- Pagina 2 -->
     <div class="text-center" style="display: none;" id="solucao">
         <hr/>
-        <h3 class="offset-md-2 col-md-6">Solução Ótima
-            <button class="btn float-right" onclick="reiniciar()">Reiniciar</button>
+        <h3>Solução Ótima
+            <button class="btn" onclick="analise()">Análise de Sensibilidade</button>
+            <button class="btn" onclick="reiniciar()">Reiniciar</button>
         </h3>
         <div class="offset-md-3 col-md-6">
             <table class="table texto-centro">
@@ -94,7 +104,21 @@
         </div>
     </div>
     <br>
-
+    <div class="static-modal" id="analise" style="display: none;">
+        <div tabindex="-1" role="dialog" class="modal" style="display: block;">
+            <div class="modal-dialog">
+                <div class="modal-content" role="document">
+                    <div class="modal-header">
+                        <button type="button" class="btn btn-primary pull-right" id="fechar">Voltar</button>
+                    </div>
+                    <div class="modal-body">
+                        <table id="table-analise" border="1">
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
