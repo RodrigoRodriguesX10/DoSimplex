@@ -1,5 +1,5 @@
-# DoSimplex
-Simple JavaScript Program to solving Linear Programming Problems with SIMPLEX
+# DoSimplex 
+Simple JavaScript Program to solving Linear Programming Problems with SIMPLEX. [[Ler PT-BR](https://github.com/RodrigoRodriguesX10/DoSimplex/blob/master/README.pt.md)]
 
 ## Warning!
 This job was developed for study scenario and has no commitment to professional matters.
@@ -30,7 +30,7 @@ You got the initial tableau:
 | Z | 0 | -3 | -5 | 0 | 0 | 0 |
 
 ### For code:
-Using simplex.js file:
+Using simplex.js (this file doesn't require any other library or module) file:
 
     var tableau = {
 
@@ -59,3 +59,12 @@ Using simplex.js file:
     console.log(tableau); // see the result
 
     console.log("Z = "+ tableau.tableau[0][0]); // Z = 29
+  
+### For Interface Usage:
+Open index.html (this file requires Bootstrap, Popper and jQuery v3.3.1):
+- Input number of variables and restrictions;
+- Input restriction values;
+- Calculate result.
+
+### TEST ONLINE!
+This project is running at: https://dosimplex.azurewebsites.net
