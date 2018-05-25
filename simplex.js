@@ -138,7 +138,7 @@ function criarFuncaoObjetivo(tab) {
 function simplex(tab, iteracoes) {
     console.log("TABLEAU INICIAL: ", JSON.stringify(tab));
     let loop = 0;
-    iteracoes = iteracoes || 20;
+    iteracoes = Number(iteracoes) || 20;
     try {
         let passoapasso = [];
         let pivot_col, pivot_row;
