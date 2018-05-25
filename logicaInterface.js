@@ -162,7 +162,7 @@ function gerarTabelaSolucao(tabela) {
     }
     for (let variavel = 0; variavel < tabela.n; variavel++) {
         var nome;
-        Z += '<th>' + Number.isInteger(tabela.tableau[0][variavel]) ? tabela.tableau[0][variavel] : tabela.tableau[0][variavel].toFixed(3) + '</th>';
+        Z += '<th>' + Number(tabela.tableau[0][variavel]).toFixed(3) + '</th>';
         linhatexto += '<th>' + (variavel ? tabela.labelRow[variavel - 1] : "b") + '</th>';
     }
     Z += "</tr>";
