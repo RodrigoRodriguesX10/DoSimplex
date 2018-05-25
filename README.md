@@ -51,6 +51,10 @@ Using simplex.js (this file doesn't require any other library or module) file:
             [18, 3, 2]
 
         ],
+        
+        restrictions: ["<=", "<=", "<="],
+        
+        max: true, // if you want "MINIMIZE" objective, use FALSE
 
     };
 
