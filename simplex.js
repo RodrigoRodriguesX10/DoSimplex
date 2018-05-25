@@ -146,6 +146,9 @@ function simplex(tab, iteracoes) {
         add_variaveis_nao_basicas(tab);
         passoapasso.push(createCopy(tab));
         do {
+            if(loop > 20) return false;
+            if (loop >= iteracoes) break;
+
             if (!tab.max) {
                 if (!loop && tab.hasExtraVariable) calculateZLine(tab);
                 pivot_col = find_pivot_column(tab);
@@ -161,7 +164,6 @@ function simplex(tab, iteracoes) {
                     break;
                 }
                 pivot_on(tab, pivot_row, pivot_col);
-                if (loop > iteracoes) return false;
             }
             else {
                 pivot_col = find_pivot_column(tab);
@@ -173,7 +175,6 @@ function simplex(tab, iteracoes) {
                     break;
                 }
                 pivot_on(tab, pivot_row, pivot_col);
-                if (loop > iteracoes) return false; // Essa linha limita a quantidade de iterações, ou seja, pode ser passada por parâmetro
             }
             passoapasso.push(createCopy(tab));
         } while (++loop);
