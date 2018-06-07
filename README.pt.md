@@ -1,6 +1,11 @@
 # DoSimplex
 Programa simples em Javascript para resolução de Problemas de Programação Linear com SIMPLEX. [[Read EN-US](https://github.com/RodrigoRodriguesX10/DoSimplex/blob/master/README.md)]
 
+# [Notas de Versão](https://github.com/RodrigoRodriguesX10/DoSimplex/releases)
+- 10/05/2018 - [v1.0.0](https://github.com/RodrigoRodriguesX10/DoSimplex/releases/tag/v1.0.0)
+- 17/05/2018 - [v1.1.2](https://github.com/RodrigoRodriguesX10/DoSimplex/releases/tag/v1.1.2)
+- 24/05/2018 - [v1.2.4](https://github.com/RodrigoRodriguesX10/DoSimplex/releases/tag/v1.2.4)
+
 ## AVISO!
 Esse trabalho foi desenvolvido para cenário de estudo e não tem compromisso com questões profissionais.
 Esse projeto foi desenvolvido por estudantes universitários com objetivo, exclusivamente, didático e está associado com a disciplina de "Pesquisa Operacional" do curso de Sistemas de Informação do "Centro Universitário Eurípedes de Marília" (UNIVEM - Brasil).
