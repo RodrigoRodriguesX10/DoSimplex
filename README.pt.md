@@ -10,6 +10,22 @@ Programa simples em Javascript para resolução de Problemas de Programação Li
 Esse trabalho foi desenvolvido para cenário de estudo e não tem compromisso com questões profissionais.
 Esse projeto foi desenvolvido por estudantes universitários com objetivo, exclusivamente, didático e está associado com a disciplina de "Pesquisa Operacional" do curso de Sistemas de Informação do "Centro Universitário Eurípedes de Marília" (UNIVEM - Brasil).
 
+## Desenvolvido por:
+- Caio Takata, RA: 554316 
+- Camila Beloti, RA: 562831
+- Fernanda Sartori, RA: 558508
+- Rodrigo G. Rodrigues, RA: 560030
+
+## Tecnologias Web:
+- Interface do Usuário:
+    - HTML5
+    - CSS3
+    - JavaScript
+    - jQuery
+    - BootStrap
+- Arquivo código-fonte Simplex.js: código 100% JavaScript (pode ser usado no lado do cliente ou do servidor)
+- Hospedagem com Azure Web App
+
 ## Exemplo
 Seja o objetivo:
 
