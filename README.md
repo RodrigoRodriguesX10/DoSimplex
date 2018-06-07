@@ -16,7 +16,7 @@ This project was developed by university students with an exclusively didactic p
 - Fernanda Sartori, RA: 558508
 - Rodrigo G. Rodrigues, RA: 560030
 
-## Web Tecnologies:
+## Web Technologies:
 - User Interface:
     - HTML5
     - CSS3
