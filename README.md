@@ -10,6 +10,22 @@ Simple JavaScript Program to solving Linear Programming Problems with SIMPLEX. [
 This job was developed for study scenario and has no commitment to professional matters.
 This project was developed by university students with an exclusively didactic purpose and is associated to the "Operational Research" discipline of the Information Systems course of the "University Center Euripedes of Marília" (UNIVEM - Brazil).
 
+## Developed by:
+- Caio Takata, RA: 554316 
+- Camila Beloti, RA: 562831
+- Fernanda Sartori, RA: 558508
+- Rodrigo G. Rodrigues, RA: 560030
+
+## Web Tecnologies:
+- User Interface:
+    - HTML5
+    - CSS3
+    - JavaScript
+    - jQuery
+    - BootStrap
+- Simplex.js file: 100% JavaScript Code (can be used with client or server-side)
+- Hosting with Azure Web App
+
 ## Example
 Be the goal:
 
